@@ -1,0 +1,23 @@
+name: Build Image
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-image:
+    name: "Release"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push image
+        run: |
+          SYNAPSE_VERSION=$(curl --silent "https://api.github.com/repos/matrix-org/synapse/releases/latest" | jq -r .tag_name)
+          IMAGE_TAG=docker.pkg.github.com/myyra/synapse/synapse:$SYNAPSE_VERSION
+          docker build --build-arg SYNAPSE_VERSION=$SYNAPSE_VERSION -t $IMAGE_TAG .
+          docker push $IMAGE_TAG
