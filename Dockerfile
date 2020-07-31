@@ -14,7 +14,7 @@ RUN pip install --upgrade pip \
         pynacl
 
 RUN mkdir /synapse \
- && wget https://github.com/matrix-org/synapse/archive/v1.17.0.tar.gz -O synapse.tar.gz \
+ && wget https://github.com/matrix-org/synapse/archive/v1.18.0.tar.gz -O synapse.tar.gz \
  && tar -xf synapse.tar.gz -C /synapse --strip-components=1
 
 RUN pip install --prefix="/install" --no-warn-script-location \
